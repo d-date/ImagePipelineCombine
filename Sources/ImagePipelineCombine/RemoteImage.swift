@@ -4,10 +4,12 @@ import Combine
 public struct RemoteImage: View {
   @ObservedObject var imageModel: ImageModel
   var defaultImage: OSImage
+  var failureImage: OSImage?
 
-  public init(url: URL, defaultImage: OSImage) {
+  public init(url: URL, defaultImage: OSImage, failureImage: OSImage? = nil) {
     self.imageModel = .init(url: url)
     self.defaultImage = defaultImage
+    self.failureImage = failureImage
   }
 
   public var body: some View {

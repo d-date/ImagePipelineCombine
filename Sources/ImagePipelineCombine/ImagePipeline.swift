@@ -11,7 +11,7 @@ public typealias OSImage = UIImage
 open class ImagePipeline {
   public static let shared = ImagePipeline()
 
-  private let fecther: Fetching
+  private let fetcher: Fetching
   private let memoryCache: ImageCaching
 
   private let queue = DispatchQueue(label: "com.d-date.ImageCache", qos: .userInitiated)
@@ -20,17 +20,17 @@ open class ImagePipeline {
     fecther: Fetching = Fetcher(),
     memoryCache: ImageCaching = MemoryCache()
   ) {
-    self.fecther = fecther
+    self.fetcher = fecther
     self.memoryCache = memoryCache
   }
 
-  open func load(_ url: URL) -> AnyPublisher<OSImage?, Error> {
+  open func load(_ url: URL, failureImage: OSImage? = nil) -> AnyPublisher<OSImage?, Never> {
     if let image = memoryCache.load(for: url) {
       return Result.Publisher(image)
         .eraseToAnyPublisher()
     }
 
-    return fecther.fetch(url)
+    return fetcher.fetch(url)
       .subscribe(on: queue)
       .map(\.data)
       .decode()
@@ -39,6 +39,7 @@ open class ImagePipeline {
           self?.memoryCache.store(image, for: url)
         }
       })
+      .replaceError(with: failureImage)
       .eraseToAnyPublisher()
   }
 }

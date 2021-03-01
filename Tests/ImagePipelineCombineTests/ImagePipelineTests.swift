@@ -53,7 +53,8 @@ class ImagePipelineTests: XCTestCase {
     pipeline.load(url)
       .sink { (completion) in
         switch completion {
-          case .failure:
+          case .finished:
+            // When not specified failure image, nil will return as output.
             ex.fulfill()
           default:
             XCTFail()
