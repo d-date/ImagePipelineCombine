@@ -35,12 +35,8 @@ public func decode(_ data: Data) throws -> OSImage? {
   }
 
   let bytes = Array(data)
-  if bytes.isJPEG || bytes.isPNG || bytes.isGIF, let image = OSImage(data: data) {
+  if !bytes.isWebP, let image = OSImage(data: data) {
     return image
-  }
-
-  guard bytes.isWebP else {
-    return nil
   }
 
   return data.withUnsafeBytes { (buffer: UnsafeRawBufferPointer) in

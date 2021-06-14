@@ -15,7 +15,7 @@ class ImagePipelineTests: XCTestCase {
 
     XCTAssertEqual(remoteImage.image(), SwiftUI.Image(defaultImage).resizable())
 
-    RunLoop.main.run(until: Date(timeIntervalSinceNow: 3))
+    RunLoop.main.run(until: Date(timeIntervalSinceNow: 10))
 
     assertSnapshot(matching: remoteImage.imageModel.image!, as: .image)
   }
